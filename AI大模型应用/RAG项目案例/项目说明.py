@@ -1,0 +1,15 @@
+"""
+本次项目以“某东商品衣服”为例，以衣服属性构建本地知识。使用者可以自由更新本地知识，用户问题的答案也是基于本地知识生成的。
+项目主要会实现如下代码：
+    app_file_upload.py：知识库更新主程序(streamlit)
+    app_qa.qy：项目主程序(streamlit)，启动对话WEB页面
+    config_data.py：配置文件
+    file_history_store.py：长期会话记忆存储服务
+    knowledge_base.py：知识库更新服务
+    rag.py：rag核心服务
+    vector_stores.py：向量存储服务
+以下是文件夹：
+    chat_history：长期会话记忆
+    chroma_db：向量数据库
+    data：私有知识
+"""

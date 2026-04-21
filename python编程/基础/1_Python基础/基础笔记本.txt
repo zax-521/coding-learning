@@ -1,0 +1,327 @@
+一、字符串 str
+1.i = 12 s = str(i) --> 12-->'12'  type(s) -->显示该变量的数据类型
+2.input()
+3.if elif else
+4.while ture: 整数只要不是0都能一直运行，其他的只要不是空就能一直运行，
+    即 str != "", 即bool(str) != False
+5.for i in range(1,10,2)-->(start,end,step) 即数学[start,end)
+
+s = 'python'
+6.切片s[start:end:step每隔几个切割，正取左，负取右]顾头不顾腚即[start,end)，
+    step:"-"表示从右往左，正和0表示从左往右
+7.s.capitalize() 首字母大写
+8.s.title() 每个首字母大写
+9.s.lower()
+10.s.upper()
+11.s.strip()
+12.修改字符串
+    s.replace("old", "new")  s.replace("", "") 
+13.a = "as_adsadas_adsaddsa" split("用什么切割") 用什么切，就会损失什么
+    lst = a.split("_") 切割后将结果放在列表中 lst 为列表名
+14.s.find("需要查找的字符串") 如果没有就返回-1
+    s.index("需要查找的字符串") 如果没有就报错
+    print("需要查找的字符串" in s) 存在就返回True,反之是False
+    print("需要查找的字符串" not in s)  不存在就返回True,反之是False
+15.判断是否以xx开头 s.startswith("需要判断的字符串") 是就返回True,反之是False
+    判断是否以xx结尾 s.endswith("需要判断的字符串") 是就返回True,反之是False
+16.判断是否是数字 s.isdigit()
+17.len(s) 长度
+18."xx".join(),能将列表里的元素按xx拼起来,
+    即lst['a', 'b', 'c', 'd'] s = "_".join(lst) --> s = 'a_b_c_d'
+                              s = "".join(lst) --> s = 'abcd'
+总结见图1, 1.2, 1.3
+
+二、列表 list,      lst = ["one","twe","three"]
+    特性：1.像字符串一样也有索引跟切片
+         2.索引超出返回会报错
+         3.可以用for循环进行遍历
+         4.不可哈希
+增添
+1.lst.append("想要添加的元素")追加末尾添加
+2.lst.insert(索引,"想要添加的元素")位置插入
+3.lst.extend(列表 或 [想添加的多项元素用列表形式])批量添加，可以合并两个列表
+
+删除
+4.ret = lst.pop(索引) 给出被删除的索引，返回被删除的元素
+5.lst.remove("想要删除的元素") 删除某个元素
+
+修改
+6.lst[索引] = 修改后的元素  直接用索引进行修改操作
+
+查找
+7.print(lst[索引]) 直接用索引进行查找
+
+排序 (列表会按照你存放的顺序进行保存)
+8.lst.sort()对列表进行升序排序
+9.lst.sort(reverse = True)对列表进行降序排序  reverse: 翻转
+
+嵌套
+10.例子：lst = ['0','1',['2','3','4',['5','6','7']],'8','9']
+    lst[2] = ['2','3','4',['5','6','7']]
+    lst[2][3] = ['5','6','7']   索引从0开始计算
+    lst[2][3][2] --> 7  依旧是按照索引获取元素，只不过获取的元素由于嵌套变成了列表
+
+循环删除
+11.直接运用循环删除会导致删除元素时索引错乱，从而导致漏删。
+    lst = ['1one', '1two', '1three', '2one', '2two', '2three']
+    for item in lst:
+        if item.startswith('1'):
+            lst.remove(item)
+    print(lst) --> lst = ['1two', '2one', '2two', '2three']
+    由于'1one' str[0]被删除，所有元素自动向前移一位，导致'1two'从str[1]变成str[0]，
+    但是由于已经循环过str[0]，所有下一个直接检索由str[2]变成的str[1] '1three',
+    这就导致'1two'被遗漏。
+    改进：将要删除的内容保存在一个新列表中。循环新列表，删除老列表
+    lst = ['1one', '1two', '1three', '2one', '2two', '2three']
+    temp = []
+    for item in lst:
+        if item.startswith('1'):
+            temp.append(item)   将要删除的元素添加到新列表temp[]中，temp = ['1one', '1two', '1three']
+    for item1 in temp:          再循环新列表
+        lst.remove(item1)       用具体元素在lst[]老列表中进行删除-->例：lst.remove('1one')
+    print(lst) --> lst = ['2one', '2two', '2three']
+
+三、元组 tuple,  t = ("one","twe","three")
+    特性：1.不可变的列表，即不能修改具体内容
+         2.可哈希
+    当我们固定了某些元素，不允许外界修改时，可用元组。
+1.元组如果只有一个元素时，需要在末尾加一个逗号，即t = ("one",)
+    不然会被当成时字符串，其括号会被默认成为优先级。
+2.如果元组里面嵌套了列表，里面的列表的内容是可变的，内存地址不能变 t = (1, 2, 3, ["4", "5"])
+
+四、集合 set,  s = {"one", 1, "twe", "three"}
+    特性：1.无序的
+         2.python中的set集合进行数据存储的时候，
+            需要对数据进行哈希计算，根据计算出来的哈希值进行数据存储
+            set集合要求存储的数据必须是可以进行哈希计算的
+         3.可哈希：不可变的数据类型，int, str, tuple, bool值.
+            不可哈希：可变的数据类型：list, dict, set.
+s = set() 创建空集合, t = tuple() 空元组, l = list() 空列表, s = str() 空字符串
+
+增加
+1.s.add("one")
+
+删除
+2.s.pop() set集合没有索引，所以默认弹出最后一个，但由于set集合无序,所以无法验证，不常用
+3.s.remove("具体元素内容")
+
+修改 (想要修改，必须先删除,再新增)
+4.s.remove("one") s.app("two")
+
+查询 (通过循环，进行遍历)
+5.for item in s:
+    print(item)
+
+交集，并集，差集
+    s1 = {"one", "two", "three", "4"}
+    s2 = {"1", "2", "3", "4"}
+6.交集 
+    print(s1 & s2) --> {"4"} 或 print(s1.intersection(s2))
+7.并集 
+    print(s1 | s2) --> {"one", "two", "three", "4", "1", "2", "3"} 
+或 print(s1.union(s2))
+8.差集 
+    print(s1 - s2) --> {"one", "two", "three"} 
+    print(s2 - s1) --> {"1", "2", "3"}
+    或print(s1.difference(s2)) --> {"one", "two", "three"}
+
+去重,即去除重复
+9.lst = ['one', 'two', 'three', 'one', 'two', 'three']
+    set(lst) --> {'one', 'two', 'three'}
+    list(set(lst)) --> ['one', 'two', 'three']
+注：去重之后的数据是无序的，即使重新转换成列表一样还是无序的
+
+五、字典  以键值对的形式存储数据 {key : value, key2 : value, key3 value}
+    特点：1.字典的key必须是可哈希的数据类型(不可变)，而value可以是任意数据类型
+                例如：dic = {"dog" : ["xiaobai", "xiaohei"]}
+         2.字典中的键具有唯一性
+dic = {"tom" : "cat", "jerry" : "mouse"}
+val = dic["tom"]查询键对应的值
+print(val) -->cat
+
+增添
+1.dic = dict()
+    dic[dog] = "xiaobai"
+
+修改
+2.dic[dog] = "xiaohei"-->当字典中已有dog键，此时执行的是修改操作
+        (字典中的键具有唯一性)
+    dic.setdefault("tom", "胡辣汤")    设置默认值，如果之前已经有了tom键了，
+                                        setsetdefault就不起作用了
+
+删除
+3.根据key删除
+    dic.pop("jay")
+    del dic["jay"]
+
+查询
+4.print(dic["jay"])根据key查询,如果key不存在，程序会报错，当你确定key无误时可以使用
+5.print(dic.get("jay"))如果key不存在，程序会返回None  当你不确定key时可以使用
+                None 单纯的就是空，表示没有的意思
+循环
+6.可以用for循环，直接拿到key键，再用dic[key]获取value值
+    for key in dic:
+        value = dic[key]
+        print(key,value)
+7.将所有的key全部保存在一个列表中
+    dic.keys() --> 获取所有的key
+    list(dic.keys()) --> 将所有key保存在列表中
+8.将所有的value全部保存在一个列表中
+    dic.values() --> 获取所有的value
+    list(dic.values()) --> 将所有value保存在列表中
+9.直接拿到字典中的key和value
+    1.dic.items()
+    2.for k, v in dic.items():
+        print(key, value)
+10.解构(解包)
+    a, b = (1, 2) 元组或者列表都可以执行该操作
+    print(a) --> 1 
+    print(b) --> 2
+
+嵌套
+11.wangfeng = {
+        "name" : "汪峰",
+        "age" : 40,
+        "wife" : {
+            "name" : "章子怡",
+            "hobby" : "演戏",
+            "assistant" : {
+                "name" : "樵夫",
+                "age" : "25",
+                "hobby" : "打游戏"}
+            },
+        "children" : [
+            {"name" : "小孩1号", "age" : 13},
+            {"name" : "小孩2号", "age" : 10},
+            {"name" : "小孩3号", "age" : 8}]
+        }
+    获取汪峰妻子的助手的名字
+    1.wangfeng["wife"] 获取"wife" : {"name" : "章子怡","hobby" : "演戏",
+    👇           "assistant" : {"name" : "樵夫","age" : "25", hobby" : "打游戏"}}
+    2.wangfeng["wife"]["assistant"]  获取"assistant" : {"name" : "樵夫",
+    👇                            "age" : "25", hobby" : "打游戏"}
+    3.name = wangfeng["wife"]["assistant"]["name"] print(name) --> 樵夫
+    
+    给汪峰的第二个孩子加1岁
+    wangfeng["children"][1]["age"] --> 10
+    wangfeng["children"][1]["age"] = wangfeng["children"][1]["age"] + 1
+
+循环删除
+12.dic = {"tom" : "cat", "jerry" : "mouse"}
+    temp = []  存放将要删除的key
+    for key in dic:
+        if key.startswith("t"):
+            temp.addend(key)        #dic.pop(key)直接使用这个删除会报错，
+    for t in temp:  循环列表，删除字典中的内容     所以有要创建新的列表进行辅助
+        dic.pop(t)
+    print(dic)
+
+六、字符集和编码
+0 1 <=> 1010101010 => 二进制转化成十进制 <=> 88
+ascii ==> 编排了128个文字符号，只需要7个0和1就可以表示了。01111111 => 1byte => 8bit
+1.ascii: 8bit, 1byte
+2.gbk: 16bit, 2byte windows默认
+3.unicode: 32bit, 4byte(没法用，只是一个标准，万国码)
+4.utf-8:可变长度的unicode 最短的字节长度8   mac默认
+        英文：8bit, 1byte
+        欧洲：16bit, 2byte
+        中文：24bit, 3byte
+5.gbk和utf-8不能直接进行转化 例：我军密码本 --> 文字 --> 敌军密码本
+
+七、字节 bytes
+1.str.encode("字符集")    进行编码
+2.bytes.decode("字符集")  进行解码
+例子： 通过"encode"进行解码获取字符串"周杰伦"在gbk字符集中的编码
+     str = "周杰伦"  gbk编码: str.encode("gbk") --> b'\xd6\xdc\xbd\xdc\xc2\xd7'
+     我们将gbk编码转换成utf-8编码                     b'xxxx'  bytes类型
+     bs = b'\xd6\xdc\xbd\xdc\xc2\xd7'
+     s = bs.decode("gdk") -->进行解码将gbk编码转换成文字符号(字符串)
+     bs2 = s.encode("utf-8") --> 进行编码将文字符号转换成utf-8编码 
+     bs2 --> b'\xe5\x91\xa8\xe6\x9d\xb0\xe4\xbc\xa6'
+
+八、运算符
+1.算数运算: +, -, *, /, %(余数), //(整除)
+    例：        10 / 3 = 3.....1
+        10 % 3 = 1   ,   10 // 3 = 3
+2.比较运算: >, <, >=, <=, ==, !=
+    例:a = 20, b = 20, print(a == b) --> True, print(a != b) --> False
+3.赋值运算: =, +=, -=, *=.....
+    例：将 a 与 b 互换, a = 10, b = 20
+        temp = a, a = b, b = temp
+        或 (仅适用于python: a, b = b, a) 
+4.逻辑运算: and: 并且，左右两端同时成立，结果才能成立 print(True and True) --> True, print(True and False) --> True
+           or: 或者，左右两端有一个成立，结果就成立。print(True or False) --> True
+          not: 非，非真即假，非假即真。 print(not True) --> False, print(not False) --> True 
+        运算顺序: 先算括号 > 算not > and > or        
+        当and和or以及not同时出现时，最好加上括号，不然可能会有歧义。
+5.成员运算: in: 判断xxx是否在xxxx中。
+       not in: 判断xxx是否不在xxxx中。
+
+九、文件操作
+1.打开文件 open("文件路径", mode = "", encoding = "")
+    1.文件路径：1.绝对路径：d:/test/xxxx.txt
+              2.相对路劲：相对于你的程序所在的文件夹
+              3.其中 “../” 为返回上一层文件夹
+                f = open("笔记本.txt", mode = "r", encoding = "utd-8")
+                f = open("../练习文件.txt", mode = "r", encoding = "utd-8")
+                f = open("../草稿/笔记本.txt", mode = "r", encoding = "utd-8")
+    2.mode：1.r: read 读取
+            2.w: write 写入
+            3.a: append 追加写入
+            4.+b：读写的是非文本文件 --> bytes
+    3.with：上下文，不需要手动去关闭文件
+2.读取文件 (r模式)
+    1.content = f.read() --> 读取所有文件
+    2.line = f.readline() --> 读取一行文件，每行文件自带换行(/n)，
+        可以用strip()删除两端空白以及换行等，且每读取一行，会自动跳转下一行。
+    3.content = f.readlines() --> 将文件中每一行的数据导入到列表中
+3.最重要的一种文本读取方式(重点)
+for line in f: 从f中读取到每一行数据
+    print(lines.strip())
+4.写入文件 (w模式)
+    1.w模式下，如果文件不存在，则自动创建一个文件
+      w模式下，每一次open都会清空掉文件中的内容
+        f = open("../练习文件.txt", mode = "w", encoding = "utd-8")
+        f.write("这是一句话")
+        f.close() --> 每次操作后要关闭链接
+    2.将列表中的元素写入到文件中
+        lst = ["周杰伦", "汪峰", "薛之谦", "周深", "周星驰"]
+        f = open("../练习文件.txt", mode = "w", encoding = "utd-8")
+        for item in lst:
+            f.write(item)
+            f.write("\n")
+        f.close()
+5.追加写入 (a模式)
+    f = open("../练习文件.txt", mode = "a", encoding = "utd-8")
+    f.write("蔡徐坤") --> 源文件不变，在末尾添加一个“蔡徐坤”
+    f.close()
+6.with
+    with open("../练习文件.txt", mode = "r", encoding = "utd-8") as f: --> f = open()
+        for line in f:
+            print(line.strip())
+7.读取图片 (在读写非文本文件时要加上b)
+    with open("鸡哥.jpeg", mode = "rb") as f: 
+        for line in f:
+            print(line)
+8.文件的复制 (从源文件中读取内容，写入到新路径中)
+    with open("鸡哥.jpeg", mode = "rb") as f1, open("蔡徐坤.jpeg", mode = "wb") as f2:
+        如果觉得太长可以在要换行的末尾加上‘\’，表示下一行代码同属于这一行
+    with open("鸡哥.jpeg", mode = "rb") as f1, \
+        open("蔡徐坤.jpeg", mode = "wb") as f2:
+        for line in f1:
+            f2.write(line)
+9.文件修改 (本质是将旧文件的原内容以及修改的内容写入到一个新文件中，然后在结束的时候删除旧文件，再将新文件的名称改成旧文件的名称)
+把文件中的"周"修改成"张"
+import os --> 和操作系统相关的模块导入
+import time --> 和时间相关的模块
+
+with open("名单名.txt", mode = "r", encoding = "utf-8") as f1, \
+    open("名单名_副本.txt", mode = "w", encoding = "utf-8") as f2:
+    for line in f1:
+        if line.startswith("周"):
+            line = line.replace("周", "张") -->修改
+        f2.write(line)
+    time.sleep(3) --> 让程序休眠 3 秒
+    os.remove("名单名.txt") --> 删除源文件
+    time.sleep(3) --> 让程序休眠 3 秒
+    os.rename("名单名_副本.txt") --> 把副本文件重命名为源文件
