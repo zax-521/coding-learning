@@ -44,11 +44,92 @@
                     db: 数据库编号（0 ~ 15）
                     decode_response: 是否将返回的数据从字节流解码为字符串
 
+            3.封装缓存操作：缓存操作就是围绕 Redis 做“存、取、删、判断、过期”等操作，让数据访问更快、数据库压力更小。
+                Redis存储数据：key - value
+                           方法                   参数                              描述
+                1.设置缓存：setex    key:str, expire:int(秒), value:str          设置缓存并指定过期时间（秒）
+                2.获取缓存：get                  key: str                       获取缓存值。若缓存不存在，返回None
+                3.删除缓存：delete               key: str                       删除指定的缓存键
+                4.检查缓存：exists               key: str                       检查缓存键是否存在，返回布尔值
+
+            4.设计缓存策略：
+                最常见的策略 - 旁路策略（Cache—Aside）：是一种常见的缓存策略，其核心概念是应用程序主动管理缓存，
+                    在读取数据时先检查缓存，如果缓存种没有数据，则从数据库或其他数据源加载数据，并将数据存入缓存，
+                    当数据更新或删除时，应用程序也负责更新或删除缓存种的数据。
+                    1.读：先查缓存，有数据则返回，没有数据则查讯数据库
+                    2.写：更新数据库后，更新或删除缓存数据
+
+
+
+        3. 实例：
+        cache_conf.py:
+            import redis.asyncio as redis
+
+            REDIS_HOST = "localhost"
+            REDIS_PORE = 6379
+            REDIS_DB = 0
+
+            # 创建 Redis 的连接对象
+            redis_client = redis.Redis(
+                host=REDIS_HOST, # Redis 服务器的主机地址
+                port=REDIS_PORT, # Redis 端口号
+                db=REDIS_DB, # Redis 数据库编号，0~15
+                decode_responses=True # 是否将字节数据解码为字符串
+            )
+
+            # 设置 和 读取（字符串 和列表或字典）"[{}]"
+            # 读取：字符串
+            async def get_cache(key: str):
+                try:
+                    redis_client.get(key) # 根据key获取缓存
+                except Exception as e:
+                    print(f"获取缓存失败：{e}")
+                    return None
+
+            # 读取：列表或字典
+                try:
+                    data = await redis_client.get(key)
+                    if data:
+                        return json.loads(data) # 序列化
+                    return None
+                except Exception as e:
+                    print(f"获取 JSON 缓存失败：{e}")
+                    return None
+
+            # 设置缓存
+            async def set_cache(key: str, value: Any, expire: int = 3600):
+                try:
+                    if isinstance(value, (dict, list)): # isinstance(a, b)判断a是不是b类型
+                        # 转字符串再存
+                        value = json.dumps(value, ensure_ascii=False)) # ensure_ascii是否转译，这里用False不转译，保留中文
+
+                    await redis_client.setex(key, expire, value)
+                    return True
+                except Exception as e:
+                    print(f"设置缓存失败：{e}")
+                    return None
+
+
+        news_cache.py:
+            # 新闻相关的缓存方法：新闻分类的读取和写入
+            # key - value
+            from config.cache_conf import get_json_cache, set_cache
+
+            CATEGORIES_KEY = "news:categories"
+
+            # 获取新闻分类缓存
+            async def get_cached_categories(key: str):
+                await get_json_cache(CATEGORIES_KEY)
+
+            # 写入新闻分类缓存：缓存的数据，过期时间
+            # 日常过期时间：分类、配置：7200；列表：600，详情：1800；验证码：120 -- 数据越持久，缓存越持久
+            async def set_cached_categories(data: List[Dict[str, Any]], expire: int = 7200):
+                return await set_cache(CATEGORIES_KEY, data, expire)
+
+
 
 
 """
-
-
 
 
 
