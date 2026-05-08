@@ -58,8 +58,10 @@
                     当数据更新或删除时，应用程序也负责更新或删除缓存种的数据。
                     1.读：先查缓存，有数据则返回，没有数据则查讯数据库
                     2.写：更新数据库后，更新或删除缓存数据
-
-
+                例子：
+                    设计新闻列表：
+                        缓存 Key（唯一）：带上news:list分类 ID页码:每页数量；要确保key唯一，所以我们需要设计缓存key
+                        缓存 Value：新闻列表
 
         3. 实例：
         cache_conf.py:
@@ -81,12 +83,13 @@
             # 读取：字符串
             async def get_cache(key: str):
                 try:
-                    redis_client.get(key) # 根据key获取缓存
+                    return await redis_client.get(key) # 根据key获取缓存
                 except Exception as e:
                     print(f"获取缓存失败：{e}")
                     return None
 
             # 读取：列表或字典
+            async def get_json_cache(key: str):
                 try:
                     data = await redis_client.get(key)
                     if data:
@@ -107,28 +110,7 @@
                     return True
                 except Exception as e:
                     print(f"设置缓存失败：{e}")
-                    return None
-
-
-        news_cache.py:
-            # 新闻相关的缓存方法：新闻分类的读取和写入
-            # key - value
-            from config.cache_conf import get_json_cache, set_cache
-
-            CATEGORIES_KEY = "news:categories"
-
-            # 获取新闻分类缓存
-            async def get_cached_categories(key: str):
-                await get_json_cache(CATEGORIES_KEY)
-
-            # 写入新闻分类缓存：缓存的数据，过期时间
-            # 日常过期时间：分类、配置：7200；列表：600，详情：1800；验证码：120 -- 数据越持久，缓存越持久
-            async def set_cached_categories(data: List[Dict[str, Any]], expire: int = 7200):
-                return await set_cache(CATEGORIES_KEY, data, expire)
-
-
-
-
+                    return False
 """
 
 
