@@ -389,33 +389,103 @@
                 2.ufw (Uncomplicated Firewall)：防火墙服务
                 3.sshd，ssh服务：Xshell远程登录Linux使用的就是这个服务
 
-            1.systemctl语法：systemctl start | stop | status | enable | disable 服务名
-            2.start：启动
-            3.stop：关闭
-            4.status：查看状态
-                1.Active: active (running)：表示正在运行中
-                2.Active: inactive (dead)：表示已被关闭
-                3.Loaded: loaded ...service; enabled|disabled：enabled：表示开机自启；disabled：表示不开机自启
-            5.enable：开启开机自启
-            6.disable：关闭开机自启
+            1.systemctl命令的使用：
+                1.systemctl语法：systemctl start | stop | status | enable | disable 服务名
+                2.start：启动
+                3.stop：关闭
+                4.status：查看状态
+                    1.Active: active (running)：表示正在运行中
+                    2.Active: inactive (dead)：表示已被关闭
+                    3.Loaded: loaded ...service; enabled|disabled：enabled：表示开机自启；disabled：表示不开机自启
+                5.enable：开启开机自启
+                6.disable：关闭开机自启
 
-        4.软连接
+            2.将软件集成到systemctl中：
+                部分软件安装后没有自动集成到systemctl中，我们可以手动添加
 
-        5.日期、时区
+        4.软连接：
+            在系统中创建软链接，可以将文件、文件夹链接到其他位置（类似Windows系统中的《快捷方式》）
+            1.ln命令：创建软连接
+                ln语法：ln -s 参数1 参数2
+                -s选项：创建软连接
+                参数1：被链接的文件或文件夹
+                参数2：要链接去的目的地
+
+        5.日期、时区：
+            1.date命令：查看系统的时间
+                date语法：date [-d] [+格式化字符串]
+                -d选项：可选，按照给定的字符串显示日期，一般用于日期计算
+                    例：date -d "+1 day" +%Y%m%d 显示后一天的时间
+                        year年
+                        month月
+                        day天
+                        hour小时
+                        minute分钟
+                        second秒
+                格式化字符串：可选 有空格记得用""包围
+                    %Y：年
+                    %y：年份后两位数字（00~99）
+                    %m：月份（01~12）
+                    %d：日（01~31）
+                    %H：小时（00~23）
+                    %M：分钟（00~59）
+                    %S：秒（00~60）
+                    %s：自 1970-01-01 00:00:00 UTC 到现在的秒数
+
+            2.修改Linux系统的时区
+                rm -f /etc/localtime
+                sudo ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+                将系统自带的localtime文件删除，并将/usr/share/zoneinfo/Asia/Shanghai文件链接为localtime文件即可
+
+            3.chronyc命令：
+                1.强制校准时间：
+                    语法：sudo chronyc makestep
+                2.查看校准结果：
+                    语法：chronyc tracking
 
         6.IP地址、主机名
+            1.IP地址：
+                每一台联网的电脑都会有一个地址，用于和其他计算机进行通讯
+                IP地址主要有2个版本，V4版本和V6版本
+                IPv4版本的地址格式是：a.b.c.d，其中abcd表示0~255的数字，如192.168.99.101就是一个标注的IP地址
 
-        7.网络传输
+                1.ifconfig命令：ifconfig，查看本机ip，如无法使用该命令，可以安装 apt -y install net-tools
+                    或 建议使用 ip命令：查看本机ip：语法：ip addr
 
-        8.进程管理
+                特殊的IP地址：
+                    1. 127.0.0.1：IP地址用于指代本机
+                    2. 0.0.0.0：
+                        1.可以用于指代本机
+                        2.可以在端口绑定中用来确定绑定关系
+                        3.在一些IP地址限制中，表示所有IP的意思，如放行规则设置为0.0.0.0，表示允许任意IP访问
 
-        9.主机状态
+            2.主机名：
+                每一台电脑除了对外联络地址（IP地址）以外，也可以有一个名字，称之为主机名
+                1.查看主机名：语法：hostname
+                2.修改主机名（需root）：语法：hostnamectl set-hostname 主机名,需要修改的主机名
 
-        10.环境变量
+            3.域名解析（主机名映射）：可以通过主机名找到对应计算机的IP地址，这就是主机名映射
+                访问域名(网址)的流程：具体请看"域名解析.png"
+                    先查看本机的记录（私人地址本）：
+                        Windows：C:\Windows\Sysrem32\drivers\etc\hosts
+                        Linux：/etc/hosts
+                    再联网去DNS服务器(如：114.114.114.114，8.8.8.8等)询问
 
-        11.上传、下载
+        7.虚拟机配置固定IP：
+            当前我们虚拟机的Linux操作系统，其IP地址是通过DHCP服务获取的
+            DHCP：动态获取IP地址，即每次重启后都会获取一次，可能导致IP地址频繁变更
 
-        12.压缩、解压
+        8.网络传输
+
+        9.进程管理
+
+        10.主机状态
+
+        11.环境变量
+
+        12.上传、下载
+
+        13.压缩、解压
 
 
     四、软件连接Xshell VMware Ubantu
