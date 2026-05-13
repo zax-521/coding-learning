@@ -15,7 +15,8 @@
             2.windows：D:\data\work\hello.txt
                 D:：表示D盘
                 \：表示层级关系
-        4. Linux命令入门
+    二、Linux基础操作
+        1. Linux命令入门
             1.Linux命令基础：
                 1.Linux命令基础格式：无论是什么命令，用于什么用途，在Linux中，命令有其通用的格式。
                     通用格式：command [-options] [parameter]
@@ -100,7 +101,7 @@
                 参数1：Linux路径，表示被复制的文件或文件夹
                 参数2：Linux路径，表示要复制去的地方
 
-            11。mv命令：移动文件\文件夹 （mv：move）
+            11.mv命令：移动文件\文件夹 （mv：move）
                 mv语法：mv 参数1 参数2
                 参数1：Linux路径，表示被移动的文件或文件夹
                 参数2：Linux路径，表示要移动去的地方，如果目标不存在，则进行改名，确保目标存在
@@ -128,7 +129,7 @@
                 无选项，参数必填：表示要查找的命令
 
             14.find命令：
-                1.按文件名查找指定文件：
+                1.按文件名查找指定文件/文件夹：
                     语法：find 起始路径 -name "被查找的文件名"
                     注：这里也可以使用通配符 * 进行模糊搜索
 
@@ -217,61 +218,261 @@
 
                 6.底线命令模式：详情请看 "vim底线命令模式快捷键.png"
 
+        2.root用户（超级管理员）
+            无论是Windows、MacOS、Linux均采用多用户的管理模式进行权限管理
+            root用户：拥有最大的操作系统权限
+            普通用户：其权限，一般在其HOME目录内是不受限的，其他地方仅有只读和执行权限，无修改权限
 
-    二、远程连接与权限切换
-        1. 连接工具: Xshell （Linux发行版为 ubantu 26.04，虚拟机软件：VMware）
-        2. 登录用户: student
-        3. 获取管理员权限: sudo -i   (输入 student 的密码)
-        4. 退出管理员模式: exit      (或 Ctrl + D)
+            1.su命令：用于账户切换的系统命令（su：Switch User）
+                su语法：su - 用户名
+                -：符号可选，表示是否在切换用户后加载环境变量
+                参数：用户名，表示要切换的用户，可省略，默认切换到root
 
-    二、设置静态 IP (让 IP 地址固定)
-        1. 查看网卡信息:
-           ip addr   (找到你的网卡名，比如 ens33)
+                注：使用普通用户，切换到其他用户需要输入密码；
+                    使用root用户，切换则不用
 
-        2. 编辑配置文件:
-           sudo nano /etc/netplan/01-netcfg.yaml
+            2.exit命令：切换用户后，退回上一个用户，也可以使用快捷键 ctrl + d
 
-        3. 配置内容 (按此修改)
-            # 网络配置版本，不用改
-            network:
-            version: 2
-            # 有线网卡配置
-            ethernets:
-            ens33:                         # 网卡名称（虚拟机里的网卡）
-                dhcp4: false                 # true=自动获取IP，false=手动设置
-                dhcp6: true
-            addresses:                   # ↓ 虚拟机IP地址和子网掩码
-                - 192.168.182.100/24       # 虚拟机IP：192.168.182.100 丨 /24 = 子网掩码255.255.255.0 丨 网段：192.168.182.0
-            routes:                      # ↓ 网关配置
-              - to: default              # 所有出站流量
-                via: 192.168.182.2       # 网关 = VMware NAT网关（VMnet8的.2）
-            nameservers:                 # ↓ DNS服务器
-                addresses:
-                - 119.29.29.29           # 腾讯DNS
-                - 8.8.8.8                # Google DNS
-            match:
-                macaddress: # 根据MAC地址匹配网卡
-            set-name: ens33
+            3.sudo命令：在其他命令之前，带上sudo，即可为这条命令临时赋予root授权
+                sudo语法：sudo 其他命令
+                注：不是所有用户都有权力使用sudo，我们需要为普通用户配置sudo认证
 
-        4. 保存并应用修改:
-           Ctrl + O 回车保存
-           Ctrl + X 退出编辑
-           sudo netplan apply
+                为普通用户配置sudo认证：
+                    1.切换到root用户，执行vi sudo命令，会自动通过vi编辑器打开：/etc/sudoers
+                        在文件的最后添加 用户名 ALL=(ALL) NOPASSWD:ALL ，最后通过 wq保存
+                    2.NOPASSWD:ALL：表示使用sudo命令，无需输入密码
 
-    三、常用命令速查表
-        类别          命令                      作用
-        文件管理      ls -l                   显示详细信息
-                    cd ..                   返回上一级
-                    mkdir 文件夹名            创建文件夹
-                    rm 文件名                 删除文件
+            4.用户、用户组：
+                Linux系统中可以：1.配置多个用户
+                               2.配置多个用户组
+                               3.用户可以加入多个用户组中
 
-        网络        ping 8.8.8.8            测试网络
-                   curl www.baidu.com      测试网站访问
+                Linux中关于权限的管控级别：1.针对用户的权限控制
+                                       2.针对用户组的权限控制
 
-        权限        sudo -i                 切换到 root
-                   passwd root             修改 root 密码
+            5.用户管理：以下命令需root用户执行
+                1.创建用户组：groupadd 用户组名
+                2.删除用户组：groupdel 用户组名
 
-        系统        apt update              更新软件源
-                   apt install 软件名       安装软件
-                   reboot                  重启系统
+                3.创建用户：
+                    语法：useradd [-g -m -d] 用户名
+                    -g选项：可选，指定用户的组，不指定-g，会创建同名组并自动加入，如有同名，必须使用-g
+                    -m选项：可选，将文件创建在-d路径下
+                    -d选项：可选，指定用户HOME路径，不指定，HOME目录默认在：/home/用户名
+                    参数：必填，用户名
+
+                4.删除用户：
+                    语法：userdel [-r] 用户名
+                    -r选项：可选，删除用户的HOME目录，不使用-r，删除用户时，HOME目录默认保留
+                    参数：必填，用户名
+
+                5.查看用户所属组：
+                    语法：id [用户名]
+                    参数：可选，用户名，不提供时，查看自身
+
+                6.修改用户所属组：
+                    语法：usermod [-g -G -aG] 用户组 用户名
+                    -g选项：可选，修改用户的主组（primary group），指定的组必须已存在
+                    -G选项：可选，重新设置用户的附加组列表（会覆盖原有所有附加组）
+                    -aG选项：可选，将用户追加到指定的附加组中（保留原有附加组，必须与-G连用）
+                    参数：必填，用户名
+
+            6.getent命令：
+                1.查看当前系统中有哪些用户
+                    语法：getent passwd
+                    结果：用户名:密码(x):用户ID:描述信息(无用):HOME目录:执行终端(默认bash)
+
+                2.查看当前系统中有哪些组
+                    语法：getent group
+                    结果：组名称:组认证(显示为x):组ID
+
+        3.Linux文件的权限管控信息：
+            1.ls -l结果信息解读：
+            例：drwxr-xr-x 4 root root 4096 May 11 21:32 study
+                    1         2    3
+                序号1（drwxr-xr-x）：表示文件、文件夹的权限控制信息
+                序号2（root）：表示文件、文件夹的所属用户
+                序号3（root）：表示文件、文件夹的所属用户组
+
+            关于序号1（drwxr-xr-x）的具体解读：权限细节总共分为10个槽位（这里我使用"{}"来表示划分的组，"|"来划分槽位）
+                -或d或l | { r/- | w/- | x/- } | { r/- | w/- | x/- } | { r/- | w/- | x/- } |
+                    a        b：所属用户权限      c：所属用户组权限       d：其他用户权限
+                1。-：在a中表示文件，在bcd表示无此权限
+                2.d：表示文件夹
+                3.l：表示软链接
+                4.r：表示读权限，针对文件可以查看文件内容，针对文件夹可以查看文件夹内容
+                5.w：表示写权限，针对文件可以修改此文件，针对文件夹可以在文件夹内，创建、删除、改名等操作
+                6.x：表示执行权限，针对文件可以将文件作为程序执行，针对文件夹，可以更改工作目录到此文件夹，即cd进入
+
+            例：drwxr-xr-x 4 root root 4096 May 11 21:32 study
+            该数据表示：a：该文件为d(文件夹)
+                       b：用户（root）对该文件夹的权限是：rwx
+                       c：用户组（root）对该文件夹的权限是：r-x
+                       d：其他的用户对该文件夹的权限：r-x
+
+
+            2.chmod命令：修改文件、文件夹的权限信息
+                注：只有文件、文件夹的所属用户或root用户可以修改
+                chmod语法：chmod [-R] 权限 文件或文件夹
+                -R选项：对文件夹内的全部内容应用同样的操作
+                例：
+                    1.chmod u=rwx,g=rx,o=x hello.txt：将hello.txt文件权限修改成rwxr-x--x
+                        其中：u：表示user所属用户权限，g：表示group组权限，o：表示other其他用户权限
+
+                    2.chmod -R u=rwx,g=rx,0=x test：将test文件夹以及文件夹内的全部内容权限修改成rwxr-x--x
+
+                    3.快捷写法：chmod 751 hello.txt：将文件权限修改为751
+
+                权限的数字序号：权限可以用3为数字来代表，第一位数字表示用户权限，第二位数字表示用户组权限，第三位数字表示其他用户权限
+                    数字的细节如下：r记为：4；w记为：2；x记为：1；具体详情可以看 "权限的数字序号.png"
+
+            3.chown命令：修改文件、文件夹的所属用户和用户组
+                注：普通用户无法修改所属为其他用户或组，所以此命令只适用于root用户执行
+                chown语法：chown [-R] [用户][:][用户组] 文件或文件夹
+                -R选项：同chmod
+                用户选项：用户，修改所属用户
+                用户组选项：用户组，修改所属用户组
+                :：用于分隔用户和用户组
+
+            例：
+                1.chown root hello.txt：将hello.txt所属用户修改为root
+                2.chown :root hello.txt：将hello.txt所属用户组修改为root
+                3.chown root:student hello.txt：将hello.txt所属用户修改为root，所属用户组修改为student
+                4.chown -R root test：将test文件夹所属用户修改为root，并对文件夹内全部内容应用同样规则
+
+    三、Linux实用操作
+        1.各类小技巧（快捷键）：
+            1.强制停止：ctrl + c
+            2.退出、登出：ctrl + d （注：不能用于退出vi/vim）
+            3.历史命令搜索：
+                1.history命令，查看历史输入过的全部命令
+                2.可以通过：!命令前缀，自动执行上一次匹配前缀的命令
+                    例：history：  241  python
+                                  242  python3
+                                  244  hsitory | grep python3
+                                  245  history | grep python
+                    这时输入 "!p" 时，会自动执行 python3 的命令，从下往上前缀为 p 的命令
+                3.可以通过快捷键 ctrl + r，输入内容去匹配历史命令
+                    1.回车键可以直接执行
+                    2.左右键，可以得到此命令（不执行）
+
+            4.光标移动：
+                1.ctrl + a：跳到命令开头
+                2.ctrl + e：跳到命令结尾
+                3.ctrl + 键盘左键：向左跳一个单词
+                4.ctrl + 键盘右键：向右跳一个单词
+
+            5.清屏：（其实向上划还是能看到之前的内容）
+                1.ctrl + l，可以清空终端内容
+                2.clear命令：语法：clear
+
+        2.软件安装：
+            1.操作系统安装软件有许多种方式，一般分为：
+                1.下载安装包自行安装：例如：win中的exe、msi文件等，mac中的dmg、pkg文件等
+                2.系统的应用商店内安装：例如：win中的Microsoft Store，mac中的AppStore
+                3.我们使用的ubantu Linux发行版 为Debian家族
+                    Debian家族：使用apt命令， .deb文件格式；
+                    Red Hat家族：使用yum命令， .rpm文件格式
+
+            2.ubantu软件安装：apt命令 （注：apt命令需要root权限，可以su切换到root，或使用sudo提权，apt命令需联网使用）
+                apt语法：apt [-y] [install | remove | search] 软件名称
+                -y选项：可选，自动确认，无需手动确认安装或卸载过程
+                install：安装
+                remove：卸载
+                search：搜索
+
+        3.systemctl命令：控制软件的启动和关闭
+            Linux系统很多软件（内置或第三方）均支持使用systemctl命令控制：启动、停止、开机自启
+                能够被systemctl管理的软件，一般也称之为：服务
+            系统内置的服务比较多，比如：
+                1.systemd-networkd：主网络服务
+                2.ufw (Uncomplicated Firewall)：防火墙服务
+                3.sshd，ssh服务：Xshell远程登录Linux使用的就是这个服务
+
+            1.systemctl语法：systemctl start | stop | status | enable | disable 服务名
+            2.start：启动
+            3.stop：关闭
+            4.status：查看状态
+                1.Active: active (running)：表示正在运行中
+                2.Active: inactive (dead)：表示已被关闭
+                3.Loaded: loaded ...service; enabled|disabled：enabled：表示开机自启；disabled：表示不开机自启
+            5.enable：开启开机自启
+            6.disable：关闭开机自启
+
+        4.软连接
+
+        5.日期、时区
+
+        6.IP地址、主机名
+
+        7.网络传输
+
+        8.进程管理
+
+        9.主机状态
+
+        10.环境变量
+
+        11.上传、下载
+
+        12.压缩、解压
+
+
+    四、软件连接Xshell VMware Ubantu
+        1、远程连接与权限切换
+            1. 连接工具: Xshell （Linux发行版为 ubantu 26.04，虚拟机软件：VMware）
+            2. 登录用户: student
+            3. 获取管理员权限: sudo -i   (输入 student 的密码)
+            4. 退出管理员模式: exit      (或 Ctrl + D)
+
+        2、设置静态 IP (让 IP 地址固定)
+            1. 查看网卡信息:
+               ip addr   (找到你的网卡名，比如 ens33)
+
+            2. 编辑配置文件:
+               sudo nano /etc/netplan/01-netcfg.yaml
+
+            3. 配置内容 (按此修改)
+                # 网络配置版本，不用改
+                network:
+                version: 2
+                # 有线网卡配置
+                ethernets:
+                ens33:                         # 网卡名称（虚拟机里的网卡）
+                    dhcp4: false                 # true=自动获取IP，false=手动设置
+                    dhcp6: true
+                addresses:                   # ↓ 虚拟机IP地址和子网掩码
+                    - 192.168.182.100/24       # 虚拟机IP：192.168.182.100 丨 /24 = 子网掩码255.255.255.0 丨 网段：192.168.182.0
+                routes:                      # ↓ 网关配置
+                  - to: default              # 所有出站流量
+                    via: 192.168.182.2       # 网关 = VMware NAT网关（VMnet8的.2）
+                nameservers:                 # ↓ DNS服务器
+                    addresses:
+                    - 119.29.29.29           # 腾讯DNS
+                    - 8.8.8.8                # Google DNS
+                match:
+                    macaddress: # 根据MAC地址匹配网卡
+                set-name: ens33
+
+            4. 保存并应用修改:
+               Ctrl + O 回车保存
+               Ctrl + X 退出编辑
+               sudo netplan apply
+
+        3、常用命令速查表
+            类别          命令                      作用
+            文件管理      ls -l                   显示详细信息
+                        cd ..                   返回上一级
+                        mkdir 文件夹名            创建文件夹
+                        rm 文件名                 删除文件
+
+            网络        ping 8.8.8.8            测试网络
+                       curl www.baidu.com      测试网站访问
+
+            权限        sudo -i                 切换到 root
+                       passwd root             修改 root 密码
+
+            系统        apt update              更新软件源
+                       apt install 软件名       安装软件
+                       reboot                  重启系统
 """
