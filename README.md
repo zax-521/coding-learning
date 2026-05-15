@@ -197,3 +197,240 @@
 | 2 | SQL/数据库、FastAPI 核心、ORM、Docker Compose | 4~5 周 | Todo API 一键启动，接口有测试 |
 | 3 | 异步/高级特性、认证与中间件、部署、CI | 4~5 周 | 博客系统上线，HTTPS 访问，通过 CI 自动测试 |
 | 4 | Celery、WebSocket、性能、监控等 | 按需 | 根据实际工作或项目需求选择性深耕 |
+
+# 🗺️ 个人学习路径（FastAPI → AI 应用开发）
+> **当前状态**：Python/SQL/Git/Linux/FastAPI/LangChain 已学，正在项目实战整合  
+
+---
+
+## 图例说明
+
+| 标记 | 含义 |
+|:----:|------|
+| ✅ | 已学，掌握 |
+| ⚠️ | 已学，需通过项目重新激活 |
+| 🔴 | 待学，毕业前必须完成 |
+| 🟡 | 入职后 1~2 年再学 |
+| 🟢 | 长期储备，未来 3~5 年 |
+
+---
+
+## 第一部分：基础层
+
+### Python 编程
+
+| 知识点 | 状态 |
+|--------|:---:|
+| 变量与数据类型 | ✅ |
+| 字符串操作（f-string、切片、join、split） | ✅ |
+| 列表/字典/元组/集合操作 | ✅ |
+| 控制流（if/for/while/break/continue） | ✅ |
+| 函数（定义、参数类型、返回值、lambda） | ✅ |
+| 作用域（local/global/LEGB） | ✅ |
+| 异常处理（try/except/else/finally） | ✅ |
+| 文件读写（open、with、json、csv） | ✅ |
+| 类与对象（class、继承、多态） | ⚠️ |
+| 装饰器 | ⚠️ |
+| 生成器与迭代器（yield、iter） | ⚠️ |
+| 上下文管理器（with、contextmanager） | ⚠️ |
+| 模块与包（import、__name__） | ✅ |
+| 常用内置函数（len/range/enumerate/zip/map/filter） | ✅ |
+| 类型注解（Optional、Union） | ⚠️ |
+
+### SQL 与数据库
+
+| 知识点 | 状态 |
+|--------|:---:|
+| 数据库概念（表、主键、外键） | ✅ |
+| CREATE TABLE、INSERT、SELECT、UPDATE、DELETE | ✅ |
+| WHERE、ORDER BY、LIMIT、OFFSET | ✅ |
+| 聚合函数（COUNT、SUM、AVG） | ✅ |
+| GROUP BY、HAVING | ✅ |
+| INNER JOIN、LEFT JOIN、三表联查 | ⚠️ |
+| 约束（PRIMARY KEY、FOREIGN KEY、UNIQUE、NOT NULL） | ✅ |
+| 索引（B+树原理） | 🔴 |
+| 事务（ACID） | ⚠️ |
+| 隔离级别（脏读/不可重复读/幻读） | 🔴 |
+| SQL 注入与参数化查询 | ✅ |
+
+### Linux 命令行
+
+| 知识点 | 状态 |
+|--------|:---:|
+| 远程连接（ssh） | ✅ |
+| 文件传输（rz/sz、Xftp） | ✅ |
+| 目录导航、文件操作 | ✅ |
+| 查看文件（cat、head、tail） | ✅ |
+| 搜索（grep） | ⚠️ |
+| 权限管理（chmod） | ✅ |
+| 进程查看（ps、top） | ⚠️ |
+| 后台运行（nohup） | 🔴 |
+| 关闭进程（kill） | ✅ |
+| 测试接口（curl） | 🔴 |
+| 软件安装（apt install） | ✅ |
+
+### Git 与 GitHub
+
+| 知识点 | 状态 |
+|--------|:---:|
+| init、add、commit、push、pull | ✅ |
+| remote、origin | ✅ |
+| branch、checkout、merge | ⚠️ |
+| .gitignore | ⚠️ |
+| README.md | ⚠️ |
+
+### 数据分析三件套
+
+| 知识点 | 状态 |
+|--------|:---:|
+| NumPy | 🔴 |
+| Pandas | 🔴 |
+| Matplotlib | 🔴 |
+
+---
+
+## 第二部分：后端开发层
+
+### FastAPI 框架
+
+| 知识点 | 状态 |
+|--------|:---:|
+| 创建应用、uvicorn 启动 | ✅ |
+| GET/POST/PUT/DELETE 路由 | ✅ |
+| Pydantic BaseModel、Field 校验 | ✅ |
+| response_model、status_code | ✅ |
+| 依赖注入（Depends） | ✅ |
+| HTTPException | ✅ |
+| APIRouter | ⚠️ |
+| CORS 中间件 | ✅ |
+| 自定义中间件 | ⚠️ |
+
+### SQLAlchemy 异步 ORM（2.0）
+
+| 知识点 | 状态 |
+|--------|:---:|
+| 异步引擎、异步会话 | ✅ |
+| 模型定义（DeclarativeBase、Mapped） | ✅ |
+| 外键（ForeignKey） | ✅ |
+| relationship、back_populates | 🔴 |
+| CRUD（add、select、update、delete） | ✅ |
+| 条件过滤（where、and_、or_、in_、like） | ✅ |
+| 排序分页 | ✅ |
+| 聚合查询（func.count） | ⚠️ |
+| 连接查询（join） | ⚠️ |
+| 预加载（joinedload、selectinload） | 🔴 |
+
+### 认证与安全
+
+| 知识点 | 状态 |
+|--------|:---:|
+| bcrypt 密码哈希 | ✅ |
+| JWT 签发与验证 | ✅ |
+| OAuth2PasswordBearer | ✅ |
+| get_current_user 依赖 | ✅ |
+| JWT 原理（Header/Payload/Signature） | 🔴 |
+| 权限控制（角色） | 🔴 |
+
+### 测试
+
+| 知识点 | 状态 |
+|--------|:---:|
+| pytest 基础 | 🔴 |
+| TestClient | 🔴 |
+| fixture | 🔴 |
+| 依赖覆盖 | 🔴 |
+| 覆盖率 | 🔴 |
+
+### Docker 与部署
+
+| 知识点 | 状态 |
+|--------|:---:|
+| Docker 概念 | 🔴 |
+| Dockerfile 编写 | 🔴 |
+| docker-compose | 🔴 |
+| 云服务器部署 | 🔴 |
+| Nginx 反向代理 | 🔴 |
+| HTTPS（certbot） | 🔴 |
+
+---
+
+## 第三部分：机器学习层
+
+| 知识点 | 状态 |
+|--------|:---:|
+| 监督/无监督学习 | 🔴 |
+| 线性回归、逻辑回归 | 🔴 |
+| 梯度下降 | 🔴 |
+| 过拟合/欠拟合、正则化 | 🔴 |
+| 评估指标（Accuracy、Precision、Recall、F1） | 🔴 |
+| sklearn 数据加载与预处理 | 🔴 |
+| 异常检测（IsolationForest、LOF、OneClassSVM） | 🔴 |
+| 模型保存与加载（joblib） | 🔴 |
+| NumPy/Pandas/Matplotlib | 🔴 |
+
+---
+
+## 第四部分：大模型应用层
+
+| 知识点 | 状态 |
+|--------|:---:|
+| Transformer 注意力机制 | 🔴 |
+| BERT vs GPT | 🔴 |
+| HuggingFace pipeline | 🔴 |
+| LangChain 基础 | ✅ |
+| Model I/O | ✅ |
+| Prompt 模板 | ✅ |
+| Chain | ✅ |
+| Memory | ✅ |
+| 文档加载与分割 | ✅ |
+| Embeddings | ✅ |
+| 向量数据库（Chroma/FAISS） | ✅ |
+| RAG 完整流程 | ✅ |
+| LLM API 调用 | ✅ |
+| Agent 概念与工具调用 | ✅ |
+
+---
+
+## 第五部分：面试准备
+
+| 类别 | 知识点 | 状态 |
+|------|--------|:---:|
+| 算法 | LeetCode 100~150 道 | 🔴 |
+| Python 八股 | 可变/不可变、深拷贝浅拷贝、装饰器、生成器、GIL | 🔴 |
+| 数据库八股 | 索引原理、事务ACID、隔离级别、慢查询 | 🔴 |
+| 网络八股 | HTTP状态码、TCP三次握手、HTTPS | 🔴 |
+| ML 八股 | 过拟合解决、AUC、特征工程 | 🔴 |
+
+---
+
+## 第六部分：进阶加强 🟡（入职后 1~2 年）
+
+| 类别 | 知识点 |
+|------|--------|
+| 后端 | Redis、Celery、中间件进阶、数据库优化、WebSocket |
+| AI | 模型微调（LoRA/QLoRA）、Agent 进阶、推理加速 |
+| 运维 | CI/CD、日志收集、监控告警、微服务 |
+
+---
+
+## 第七部分：长期储备 🟢（未来 3~5 年）
+
+| 类别 | 知识点 |
+|------|--------|
+| 分布式 | Kafka/RabbitMQ、分布式系统设计、Kubernetes |
+| AI 深入 | 深度学习理论、多模态、分布式训练 |
+| 软技能 | 技术文档、方案评审、带人、技术影响力 |
+
+---
+
+## 📋 时间线
+
+| 阶段 | 时间 | 内容 |
+|------|------|------|
+| 项目实战整合 | 2026.05 ~ 2026.06 | FastAPI 完整项目 |
+| ML 基础 | 2026.06 ~ 2026.07 | sklearn + 异常检测算法 |
+| 毕设实现 | 2026.07 ~ 2026.10 | 实时异常检测系统 + 论文 |
+| 大模型补缺 | 2026.10 ~ 2026.12 | Transformer + RAG 巩固 |
+| 面试准备 | 2027.01 ~ 2027.04 | 刷题 + 八股文 + 投递 |
+
+---
