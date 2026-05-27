@@ -245,14 +245,75 @@
                     lines：按照每行读取json对象
 
     六、DataFrame数据的增删改查操作
+        1.增添：
+            1.通过直接赋值的方式添加新列
+                1.固定值：df['新列名'] = 固定值 # 列名不能跟已有的相同
+                2.传入列表：df['新列名'] = [] # 传入的列表的元素必须跟数据的行相等
+                3.通过已有的列(Series)来计算新列的值：df['新列名'] = df.列名 * 2
+                4.通过函数来计算新列的值：df['新列名'] = 函数
 
-    七、高级处理 - 缺失值处理
+            2.df.assign函数添加列
+                df.assign(c1=,c2=,...,cn=)
 
-    八、高级处理 - 数据合并
+        2.删除，去重：
+            1.df.drop删除行数据：
+                1.df3.drop([0]) # 默认删除行
+                2.df3.drop([0, 2, 4]) # 删除多行
+                  # 会修改原数据：inplace=True：修改原数据,inplace默认为False
+                  df4 = df3.drop(index=[0, 2, 4], inplace=True)
 
-    九、高级处理 - 数据分组
 
-    十、高级处理 - 交叉表与透视表
+                3.df.GDP.drop([0, 2]) # 对series对象按索引删除
+
+            2.df.drop删除列数据：df3.drop([0], axis=1) # axis=1指定删除列
+
+            3.使用del删除指定的列：
+                注：del是永久删除原df中的列，drop是返回删除后的df或series，原数据不变
+                del df3['c3']
+
+            4.DataFrame数据去重：
+                # 添加一部分重复的数据（merge(), join(), concat()）
+                df4 = pd.concat([df2,df2])
+                # 实施去重操作
+                df5 = df4.drop_duplicates()
+
+            5.series数据去重：'GDP'：列名
+                1.df5 = df4.GDP.drop_duplicates()
+                2.df5 = df4.GDP.unique()
+
+        3.修改：
+            1.df.assign替换列
+            2.直接对原始的DF进行赋值修改处理
+                pd['列名'] = []
+            3.replace函数替换数据
+                1.df.replace(old, new)
+                2.df.列名.replace(old, new)
+
+        4.查询：
+            1.head()
+            2.tail()
+            3.df[['列名1', '列名2', ...]] 或 df.列名
+            4.df[start : end : step]：包左不包右
+            5.df.query()
+            6.df2.sort_values
+
+        5.rank函数：
+            1.用法：DataFrame/Series.rank(axis=0/1, numeric_only=True, na_option=keep/top/bottom,
+                    ascending=True, pct=True, method=average/min/max/dense)
+            2.axis：设置按照列还是行排序，0为列，1为行
+            3.numeric_only：是否值计算数字型的columns，默认为True
+            4.na_option：NaN值是否参与排序，以及如何排序
+                1.keep；NaN值保留原有位置
+                2.top：NaN值全部放在前面（升序时）
+                3.bottom：NaN值全部放在末尾（升序时）
+            5.ascending：升序或降序，默认True升序
+            6.pct：是否以排名的百分比显示排名（所有排名与最大排名的百分比），默认False
+            7.method：排名评分的计算方式，固定值参数
+                1.average：默认值，排名评分不连续；数值相同的评分一致，都为平均值（即都为2.5名）
+                2.min：数值相同的取最小排名，排名不连续（即并列第2，没有第3名）
+                3.max：数值相同的取最大排名，排名不连续（即并列第3，没有第2名）
+                4.dense：数值相同的取相同排名，且排名连续（即并列第2，且有第三名）
+
 """
 import os
 
@@ -451,8 +512,57 @@ from sqlalchemy import create_engine
 # print(sql_df2)
 
 # # Pandas读取json文件
-# 读取json文件
-json_df = pd.read_json('./data/test.json', orient='records', lines=True)
-print(json_df)
-# 将上述数据，写入json文件中
-json_df.to_json('./data/my_file1.json', orient='records', lines=True)
+# # 读取json文件
+# json_df = pd.read_json('./data/test.json', orient='records', lines=True)
+# print(json_df)
+# # 将上述数据，写入json文件中
+# json_df.to_json('./data/my_file1.json', orient='records', lines=True)
+
+
+# # Pandas的增删改查操作
+# # 通过直接赋值的方式添加新列
+df1 = pd.read_csv('./data/1960-2019全球GDP数据.csv', encoding='gbk')
+# 浅拷贝
+df2 = df1[:5].copy()
+# print(df2)
+# # 增添
+# df2['c1'] = 33
+# print(df2)
+# # 新增数据数量必须和行数相等
+# df2['c2'] = [1, 2, 3, 4, 5]
+# df2['c3'] = df2.year * 2
+def my_fun1():
+    return 1200
+# df2['c4'] = my_fun1()
+# print(df2)
+# # df.assign函数添加列
+# df3 = df2.assign(c1=66)
+df3 = df2.assign(
+    c1=33,
+    c2=[1,2,3,4,5],
+    c3=df2.year * 2,
+    c4 = my_fun1()
+)
+print(df3)
+print('=========修改后==========')
+
+# 删除
+# df4 = df3.drop(index=[0, 2, 4])
+# 会修改原数据
+# df3.drop(index=[0, 2, 4], inplace=True)
+# print(df3)
+# df4 = df3.drop(['c4'], axis=1)
+# print(df4)
+# del df3['c4']
+# print(df3)
+
+# # 去重
+# # 添加一部分
+# df4 = pd.concat([df3, df3])
+# print(df4)
+# print('==============DataFrame去重=================')
+# df5 = df4.drop_duplicates()
+# print(df5)
+
+# 修改
+# 查询
